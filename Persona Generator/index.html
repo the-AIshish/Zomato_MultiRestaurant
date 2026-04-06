@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI/UX Designer Persona Generator</title>
+  <meta name="description" content="Generate 3 distinct UI/UX designer personas with complete design systems for AI coding tools." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    :root, [data-theme="dark"] {
+      --bg: #000000;
+      --bg-2: #0a0a0a;
+      --surface: rgba(11, 21, 39, 0.78);
+      --surface-2: rgba(15, 28, 50, 0.9);
+      --surface-3: rgba(10, 18, 31, 0.96);
+      --text: #e6f2ff;
+      --text-muted: #91a7c7;
+      --text-faint: #69809f;
+      --line: rgba(116, 184, 255, 0.16);
+      --line-strong: rgba(116, 184, 255, 0.28);
+      --primary: #63e6ff;
+      --primary-2: #6c8cff;
+      --accent: #39ffb6;
+      --warning: #ffb86b;
+      --danger: #ff6b8b;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --glow: 0 0 0 1px rgba(99, 230, 255, 0.08), 0 0 24px rgba(99, 230, 255, 0.08), 0 0 80px rgba(108, 140, 255, 0.08);
+      --radius-sm: 16px;
+      --radius-md: 24px;
+      --radius-lg: 32px;
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --text-xs: clamp(0.75rem, 0.72rem + 0.12vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.83rem + 0.2vw, 1rem);
+      --text-base: clamp(1rem, 0.96rem + 0.22vw, 1.1rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.8vw, 1.4rem);
+      --text-xl: clamp(1.4rem, 1.2rem + 1vw, 2rem);
+      --text-2xl: clamp(2.2rem, 1.2rem + 3vw, 4.8rem);
+      --content: 1240px;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg: #f6fbff;
+      --bg-2: #edf5ff;
+      --surface: rgba(255,255,255,0.85);
+      --surface-2: rgba(245,250,255,0.94);
+      --surface-3: rgba(255,255,255,0.98);
+      --text: #08111f;
+      --text-muted: #49607e;
+      --text-faint: #7084a0;
+      --line: rgba(20, 80, 130, 0.12);
+      --line-strong: rgba(20, 80, 130, 0.22);
+      --primary: #0077ff;
+      --primary-2: #5d4bff;
+      --accent: #00b884;
+      --warning: #c97f1a;
+      --danger: #d63c66;
+      --shadow: 0 18px 50px rgba(17, 40, 70, 0.12);
+      --glow: 0 0 0 1px rgba(0,119,255,0.06), 0 0 24px rgba(0,119,255,0.05);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(99,230,255,0.12), transparent 20%),
+        radial-gradient(circle at 90% 0%, rgba(108,140,255,0.16), transparent 24%),
+        radial-gradient(circle at 100% 100%, rgba(57,255,182,0.08), transparent 18%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(99,230,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,230,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+    }
+
+    a { color: inherit; }
+    button, textarea, input { font: inherit; }
+
+    .shell { max-width: var(--content); margin: 0 auto; padding: 20px; }
+
+    .skip-link { position: absolute; left: -999px; top: 0; }
+    .skip-link:focus { left: 16px; top: 16px; z-index: 1000; background: var(--primary); color: white; padding: 10px 14px; border-radius: 999px; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0 24px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, rgba(99,230,255,0.25), rgba(108,140,255,0.5));
+      border: 1px solid rgba(99,230,255,0.24);
+      box-shadow: var(--glow);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-copy span {
+      display: block;
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .chip-btn, .status-chip {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .chip-btn {
+      cursor: pointer;
+    }
+
+    .hero-panel, .card {
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .hero-panel::before, .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(99,230,255,0.08), transparent 25%, transparent 70%, rgba(108,140,255,0.08));
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .hero-panel {
+      padding: clamp(26px, 4vw, 48px);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: auto 0 0 auto;
+      width: 280px;
+      height: 280px;
+      background:
+        linear-gradient(rgba(99,230,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,230,255,0.08) 1px, transparent 1px);
+      background-size: 18px 18px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 78%);
+      opacity: 0.7;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--primary);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(99,230,255,0.18);
+      background: rgba(99,230,255,0.08);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      max-width: 12ch;
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy {
+      max-width: 62ch;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .button-row, .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      min-height: 48px;
+      border-radius: 16px;
+      padding: 14px 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible, textarea:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+    .btn-primary {
+      color: #05111d;
+      border-color: rgba(99,230,255,0.3);
+      background: linear-gradient(135deg, var(--primary), #b0f4ff);
+      box-shadow: 0 10px 30px rgba(99,230,255,0.22);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+    }
+
+    .stats {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: var(--text-lg);
+      font-family: var(--font-display);
+      letter-spacing: -0.03em;
+      margin-bottom: 2px;
+    }
+
+    .stat span { color: var(--text-muted); font-size: var(--text-sm); }
+
+    .side-stack { display: grid; gap: 20px; }
+    .card { padding: 24px; }
+    .card h2, .workspace-head h2, .results-head h2 { margin: 0 0 10px; font-size: var(--text-xl); line-height: 1.04; font-family: var(--font-display); letter-spacing: -0.03em; }
+    .card p, .workspace-head p, .results-head p { color: var(--text-muted); margin: 0; }
+
+    .mini-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .mini-tags span {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--text-muted);
+      font-size: var(--text-xs);
+      background: rgba(255,255,255,0.025);
+    }
+
+    .workspace {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .workspace-head { margin-bottom: 16px; }
+
+    .input-wrap, .output-wrap {
+      padding: clamp(20px, 2.5vw, 30px);
+    }
+
+    .field-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    .field-top span:last-child { color: var(--text-faint); }
+
+    textarea {
+      width: 100%;
+      min-height: 360px;
+      resize: vertical;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: rgba(3, 10, 20, 0.48);
+      color: var(--text);
+      padding: 18px;
+      box-shadow: inset 0 0 0 1px rgba(99,230,255,0.03);
+    }
+
+    .hints {
+      list-style: none;
+      margin: 16px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hints li {
+      display: flex;
+      gap: 10px;
+      align-items: start;
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .output-wrap { position: sticky; top: 16px; }
+
+    .results-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .empty {
+      min-height: 460px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      border-radius: 24px;
+      border: 1px dashed var(--line-strong);
+      background: radial-gradient(circle at top, rgba(99,230,255,0.06), transparent 35%), rgba(255,255,255,0.01);
+    }
+
+    .empty .icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+      color: var(--primary);
+      background: rgba(99,230,255,0.08);
+      border: 1px solid rgba(99,230,255,0.18);
+      box-shadow: var(--glow);
+    }
+
+    .guide {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(57,255,182,0.18);
+      background: rgba(57,255,182,0.05);
+      margin-bottom: 16px;
+    }
+
+    .guide strong { display: block; margin-bottom: 8px; color: var(--accent); }
+    .guide ul { margin: 0; padding-left: 18px; color: var(--text-muted); }
+
+    .persona-grid { display: grid; gap: 16px; }
+
+    .persona {
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.025);
+      padding: 18px;
+    }
+
+    .persona-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .persona h3 {
+      margin: 0 0 4px;
+      font-size: var(--text-lg);
+      line-height: 1.1;
+    }
+
+    .persona p {
+      margin: 0 0 12px;
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .style-pill {
+      flex-shrink: 0;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--primary);
+      border: 1px solid rgba(99,230,255,0.2);
+      background: rgba(99,230,255,0.08);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .meta span {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+    }
+
+    details {
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      max-height: 360px;
+      overflow: auto;
+      border-radius: 18px;
+      background: #030811;
+      color: #c8f7ff;
+      border: 1px solid rgba(99,230,255,0.12);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer {
+      margin: 24px 0 8px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .workspace { grid-template-columns: 1fr; }
+      .output-wrap { position: static; }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 14px; }
+      .topbar, .results-head, .persona-top { flex-direction: column; align-items: flex-start; }
+      .stats { grid-template-columns: 1fr; }
+      textarea { min-height: 300px; }
+      h1 { max-width: 13ch; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 21V7L14 11.5L22 7V21L14 16.5L6 21Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M14 11.5V16.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <circle cx="22" cy="7" r="2" fill="currentColor" opacity="0.85"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <strong>UI/UX Designer Persona Generator</strong>
+          <span>Hi-tech prompt system for design direction discovery</span>
+        </span>
+      </a>
+      <div class="toolbar">
+        <div class="status-chip"><i data-lucide="cpu"></i> Hi-tech mode</div>
+        <button class="chip-btn" type="button" data-theme-toggle aria-label="Switch theme"><i data-lucide="sun-moon"></i> Theme</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="hero-panel">
+          <div class="hero-grid"></div>
+          <span class="eyebrow"><i data-lucide="sparkles"></i> Design intelligence engine</span>
+          <h1>Generate three world-class design minds from one product brief.</h1>
+          <p class="hero-copy">Paste your PRD or rough idea and instantly produce 3 sharply differentiated UI/UX designer personas: one clean and credible, one bold and memorable, and one futuristic and premium. Each comes with a visual preview and a prompt you can paste into Cursor, Replit, Windsurf, Lovable, or v0.</p>
+          <div class="button-row">
+            <button class="btn btn-primary" id="generateTop"><i data-lucide="wand-sparkles"></i> Generate personas</button>
+            <button class="btn btn-secondary" id="loadSample"><i data-lucide="file-text"></i> Load sample brief</button>
+            <button class="btn btn-secondary" id="copyAll"><i data-lucide="copy"></i> Copy output</button>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>3 contrasts</strong><span>Clean, bold, and futuristic directions</span></div>
+            <div class="stat"><strong>Prompt-ready</strong><span>Copy directly into AI coding tools</span></div>
+            <div class="stat"><strong>GitHub ready</strong><span>Single-file static app with no backend</span></div>
+          </div>
+        </div>
+
+        <div class="side-stack"></div>
+      </section>
+
+      <section class="workspace">
+        <div>
+          <div class="workspace-head">
+            <h2>Paste your PRD or product brief</h2>
+            <p>You can use a full PRD, a rough project outline, or a one-line startup idea. The tool infers product type, audience, and design goals automatically.</p>
+          </div>
+          <div class="card input-wrap">
+            <label class="field-top" for="prdInput">
+              <span>Project requirements</span>
+              <span id="charCount">0 characters</span>
+            </label>
+            <textarea id="prdInput" placeholder="Example: We are building an AI-native sales intelligence platform for RevOps teams. The product helps deal teams identify risk signals, prep account strategy, and recommend next-best actions. Audience: enterprise AEs, sales leaders, and RevOps managers..."></textarea>
+            <ul class="hints">
+              <li><i data-lucide="check-circle-2"></i><span>Include audience, product goals, brand tone, and key features if possible.</span></li>
+              <li><i data-lucide="check-circle-2"></i><span>No PRD? Just describe what you are building and who it is for.</span></li>
+              <li><i data-lucide="check-circle-2"></i><span>The tool intentionally outputs 3 very different design personalities.</span></li>
+            </ul>
+            <div class="action-row" style="margin-top:18px;">
+              <button class="btn btn-primary" id="generateBottom"><i data-lucide="zap"></i> Generate personas</button>
+              <button class="btn btn-secondary" id="clearAll"><i data-lucide="eraser"></i> Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card output-wrap">
+          <div class="results-head">
+            <div>
+              <h2>Generated output</h2>
+              <p>Expand any persona to reveal the full prompt. Use the copy button to move the generated text into your preferred AI coding workflow.</p>
+            </div>
+            <div class="status-chip" id="statusChip"><i data-lucide="clock-3"></i> Waiting for input</div>
+          </div>
+          <div id="resultsRoot" class="empty" aria-live="polite">
+            <div>
+              <div class="icon"><i data-lucide="radar"></i></div>
+              <strong>No personas generated yet</strong>
+              <p style="color: var(--text-muted); margin-top: 8px; max-width: 30ch;">Paste your product brief and the engine will generate 3 differentiated UI/UX designer personas.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+  </div>
+
+  <script>
+    const prdInput = document.getElementById('prdInput');
+    const charCount = document.getElementById('charCount');
+    const statusChip = document.getElementById('statusChip');
+    let latestCombinedOutput = '';
+
+    const samplePRD = `Product: AI-first designer persona generator for coding tools\n\nWhat we're building:\nA sleek web tool that accepts a PRD or startup brief and returns 3 distinct UI/UX designer personas for AI coding tools like Cursor, Lovable, Replit, v0, and Windsurf.\n\nTarget audience:\n- founders\n- product managers\n- indie hackers\n- developers with weak design skills\n- designers exploring AI-assisted workflows\n\nGoals:\n- speed up design direction selection\n- improve visual quality of AI-generated products\n- give users stronger, implementation-ready prompts\n\nTone:\nmodern, premium, intelligent, creative\n\nKey features:\n- PRD input\n- 3 differentiated designer outputs\n- visual preview and best-use guidance\n- full prompt per persona\n- copy-ready experience`;
+
+    const library = {
+      clean: {
+        name: 'Mira Voss',
+        title: 'The Swiss Precision Operator',
+        style: 'Swiss Minimalism',
+        bestFor: 'B2B SaaS, dashboards, fintech, enterprise products',
+        philosophy: 'Design should reduce uncertainty. Every interface should build trust through clarity, hierarchy, and restraint.',
+        preview: 'A calm, highly legible interface with measured spacing, crisp typography, and a single accent color used with discipline.',
+        signature: ['strict modular grids', 'quiet neutral surfaces', 'typography-led hierarchy'],
+        primary: '#0B6B72', bg: '#F7F6F2', text: '#28251D',
+        visual: 'structured, left-aligned, calm, premium, and highly readable'
+      },
+      bold: {
+        name: 'Rex Calder',
+        title: 'The Neo-Brutal Brand Builder',
+        style: 'Neo-Brutalism',
+        bestFor: 'challenger startups, creator tools, youth brands, launch pages',
+        philosophy: 'Design should be impossible to ignore. Interfaces should create recall, attitude, and strong brand energy.',
+        preview: 'Imagine bold blocks, thick borders, loud contrast, oversized headings, and a startup voice that feels unapologetically direct.',
+        signature: ['hard-edged cards', 'poster-like hierarchy', 'strong contrast and memorable framing'],
+        primary: '#F4B400', bg: '#FFF8ED', text: '#111111',
+        visual: 'high-contrast, expressive, loud, and brand-forward'
+      },
+      future: {
+        name: 'Elian Quill',
+        title: 'The Interface Futurist',
+        style: 'Glassmorphism + Motion-led Modernism',
+        bestFor: 'AI products, premium consumer apps, modern SaaS, innovation-led launches',
+        philosophy: 'Design should feel advanced yet usable. Motion, glow, and transparency should guide focus, not create chaos.',
+        preview: 'Think floating translucent panels, luminous edges, premium motion, and a cinematic control-room atmosphere.',
+        signature: ['translucent surfaces', 'controlled glow', 'micro-interactions with depth'],
+        primary: '#63E6FF', bg: '#07111F', text: '#EAF7FF',
+        visual: 'futuristic, layered, premium, hi-tech, and motion-aware'
+      }
+    };
+
+    function updateCount() {
+      charCount.textContent = `${prdInput.value.length} characters`;
+    }
+
+    function inferProject(text) {
+      const lower = text.toLowerCase();
+      const tags = [];
+      if (/saas|crm|dashboard|analytics|b2b|enterprise|sales|revops/.test(lower)) tags.push('enterprise software');
+      if (/ai|agent|llm|automation|prompt|copilot/.test(lower)) tags.push('AI-native product');
+      if (/consumer|creator|gen z|community|wellness|beauty|social/.test(lower)) tags.push('consumer-facing platform');
+      if (/developer|api|code|cursor|replit|windsurf|tool/.test(lower)) tags.push('developer-adjacent tool');
+      if (!tags.length) tags.push('digital product');
+      return tags.slice(0, 3).join(', ');
+    }
+
+    function inferAudience(text) {
+      const lower = text.toLowerCase();
+      if (/enterprise|manager|team|sales leader|revops/.test(lower)) return 'professionals who care about speed, trust, and clarity';
+      if (/gen z|creator|community|consumer/.test(lower)) return 'style-aware users who respond to energy and personality';
+      if (/founder|developer|engineer|indie hacker/.test(lower)) return 'builders who want fast execution with stronger design direction';
+      return 'users who want a polished interface with a clear visual point of view';
+    }
+
+    function inferGoals(text) {
+      const lower = text.toLowerCase();
+      const goals = [];
+      if (/premium|trust|credible|professional/.test(lower)) goals.push('credibility');
+      if (/bold|brand|different|memorable/.test(lower)) goals.push('memorability');
+      if (/modern|future|innovative|ai/.test(lower)) goals.push('innovation');
+      if (/simple|clean|clarity|easy|usable/.test(lower)) goals.push('clarity');
+      if (!goals.length) goals.push('clarity', 'differentiation', 'implementation quality');
+      return goals.slice(0, 3).join(', ');
+    }
+
+    function buildPrompt(d, project, audience, goals) {
+      return `# ${d.name} — ${d.title}\n\nYou are ${d.name}, a UI/UX designer known for ${d.style}. You are designing a ${project} for ${audience}. The design should emphasize ${goals}.\n\n## Design Philosophy\n${d.philosophy}\n\n## Visual Direction\nCreate an interface that feels ${d.visual}.\n\n## Visual Preview\n${d.preview}\n\n## Core Rules\n- Keep the output unmistakably ${d.style}\n- Make the system implementable in HTML/CSS/JS or React\n- Prioritize hierarchy, readability, and consistency\n- Avoid generic AI-template layouts and repetitive feature-card grids\n\n## Color System\n- Primary: ${d.primary}\n- Background: ${d.bg}\n- Text: ${d.text}\n- Use accent color with intention, not everywhere\n\n## Typography\n- Use a strong, style-appropriate heading system\n- Keep body text highly readable\n- Create hierarchy through weight, spacing, and rhythm before decoration\n\n## Components\n- Buttons should reflect the style through border, radius, color, and hover behavior\n- Inputs should be accessible, clear, and elegant in all states\n- Cards should use surface, border, and spacing intentionally\n- Navigation should be simple and obvious across breakpoints\n\n## Motion\n- Motion must support comprehension\n- Keep transitions responsive and premium\n- Respect prefers-reduced-motion\n\n## Signature Moves\n- ${d.signature.join('\n- ')}\n\n## Accessibility\n- 4.5:1 contrast minimum for body text\n- visible focus states\n- 44px touch targets\n- semantic structure and keyboard support\n\n## Final Instruction\nDesign the product like a real high-quality launch, not a generic AI mockup. Make the aesthetic feel opinionated, consistent, and production-ready.`;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function personaCard(d, project, audience, goals) {
+      const prompt = buildPrompt(d, project, audience, goals);
+      const el = document.createElement('article');
+      el.className = 'persona';
+      el.innerHTML = `
+        <div class="persona-top">
+          <div>
+            <h3>${d.name} — “${d.title}”</h3>
+            <p>${d.philosophy}</p>
+          </div>
+          <span class="style-pill">${d.style}</span>
+        </div>
+        <div class="meta">
+          <span>Best for: ${d.bestFor}</span>
+          <span>Audience fit: ${audience}</span>
+        </div>
+        <p><strong>Visual preview:</strong> ${d.preview}</p>
+        <p><strong>Signature moves:</strong> ${d.signature.join(' • ')}</p>
+        <details>
+          <summary>→ View complete design prompt</summary>
+          <pre>${escapeHtml(prompt)}</pre>
+        </details>
+      `;
+      return { el, prompt };
+    }
+
+    function generate() {
+      const text = prdInput.value.trim();
+      if (!text) {
+        prdInput.focus();
+        statusChip.innerHTML = '<i data-lucide="alert-circle"></i> Add a brief first';
+        lucide.createIcons();
+        return;
+      }
+
+      const project = inferProject(text);
+      const audience = inferAudience(text);
+      const goals = inferGoals(text);
+      const root = document.createElement('div');
+      root.id = 'resultsRoot';
+      root.innerHTML = `
+        <div class="guide">
+          <strong>Quick decision helper</strong>
+          <ul>
+            <li>Need trust and structure? Pick Mira Voss.</li>
+            <li>Need energy and recall? Pick Rex Calder.</li>
+            <li>Need futuristic polish? Pick Elian Quill.</li>
+          </ul>
+        </div>
+        <div class="persona-grid"></div>
+      `;
+
+      const grid = root.querySelector('.persona-grid');
+      const all = [];
+      [library.clean, library.bold, library.future].forEach((d) => {
+        const card = personaCard(d, project, audience, goals);
+        grid.appendChild(card.el);
+        all.push(`${d.name}\n${card.prompt}`);
+      });
+
+      latestCombinedOutput = `Based on your brief for a ${project} targeting ${audience}, here are 3 unique UI/UX designer personas.\n\n${all.join('\n\n---\n\n')}`;
+      document.getElementById('resultsRoot').replaceWith(root);
+      statusChip.innerHTML = '<i data-lucide="sparkles"></i> Personas generated';
+      lucide.createIcons();
+    }
+
+    function copyAll() {
+      if (!latestCombinedOutput) return;
+      navigator.clipboard.writeText(latestCombinedOutput).then(() => {
+        statusChip.innerHTML = '<i data-lucide="copy-check"></i> Output copied';
+        lucide.createIcons();
+      });
+    }
+
+    function clearAll() {
+      prdInput.value = '';
+      updateCount();
+      latestCombinedOutput = '';
+      const empty = document.createElement('div');
+      empty.id = 'resultsRoot';
+      empty.className = 'empty';
+      empty.setAttribute('aria-live', 'polite');
+      empty.innerHTML = `<div><div class="icon"><i data-lucide="radar"></i></div><strong>No personas generated yet</strong><p style="color: var(--text-muted); margin-top: 8px; max-width: 30ch;">Paste your product brief and the engine will generate 3 differentiated UI/UX designer personas.</p></div>`;
+      document.getElementById('resultsRoot').replaceWith(empty);
+      statusChip.innerHTML = '<i data-lucide="clock-3"></i> Waiting for input';
+      lucide.createIcons();
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme') || 'dark';
+      root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    prdInput.addEventListener('input', updateCount);
+    document.getElementById('generateTop').addEventListener('click', generate);
+    document.getElementById('generateBottom').addEventListener('click', generate);
+    document.getElementById('copyAll').addEventListener('click', copyAll);
+    document.getElementById('loadSample').addEventListener('click', () => { prdInput.value = samplePRD; updateCount(); prdInput.focus(); });
+    document.getElementById('clearAll').addEventListener('click', clearAll);
+    document.querySelector('[data-theme-toggle]').addEventListener('click', toggleTheme);
+
+    updateCount();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
